@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio Version 17
+
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Vibron - Standalone Plugin", "Vibron_StandalonePlugin.vcxproj", "{B77788EA-B8B7-E4C9-652E-423FED0504F8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D8E34161-E405-E75F-5F43-AB17250EF347} = {D8E34161-E405-E75F-5F43-AB17250EF347}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Vibron - VST3", "Vibron_VST3.vcxproj", "{7955B4DB-1D18-DF19-ED6A-0DC76382A08D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D8E34161-E405-E75F-5F43-AB17250EF347} = {D8E34161-E405-E75F-5F43-AB17250EF347}
+		{F26CA258-D7BA-BFC5-0665-AEDF729CF777} = {F26CA258-D7BA-BFC5-0665-AEDF729CF777}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Vibron - Shared Code", "Vibron_SharedCode.vcxproj", "{D8E34161-E405-E75F-5F43-AB17250EF347}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Vibron - VST3 Manifest Helper", "Vibron_VST3ManifestHelper.vcxproj", "{F26CA258-D7BA-BFC5-0665-AEDF729CF777}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7955B4DB-1D18-DF19-ED6A-0DC76382A08D}.Debug|x64.ActiveCfg = Debug|x64
+		{7955B4DB-1D18-DF19-ED6A-0DC76382A08D}.Debug|x64.Build.0 = Debug|x64
+		{7955B4DB-1D18-DF19-ED6A-0DC76382A08D}.Release|x64.ActiveCfg = Release|x64
+		{7955B4DB-1D18-DF19-ED6A-0DC76382A08D}.Release|x64.Build.0 = Release|x64
+		{B77788EA-B8B7-E4C9-652E-423FED0504F8}.Debug|x64.ActiveCfg = Debug|x64
+		{B77788EA-B8B7-E4C9-652E-423FED0504F8}.Debug|x64.Build.0 = Debug|x64
+		{B77788EA-B8B7-E4C9-652E-423FED0504F8}.Release|x64.ActiveCfg = Release|x64
+		{B77788EA-B8B7-E4C9-652E-423FED0504F8}.Release|x64.Build.0 = Release|x64
+		{D8E34161-E405-E75F-5F43-AB17250EF347}.Debug|x64.ActiveCfg = Debug|x64
+		{D8E34161-E405-E75F-5F43-AB17250EF347}.Debug|x64.Build.0 = Debug|x64
+		{D8E34161-E405-E75F-5F43-AB17250EF347}.Release|x64.ActiveCfg = Release|x64
+		{D8E34161-E405-E75F-5F43-AB17250EF347}.Release|x64.Build.0 = Release|x64
+		{F26CA258-D7BA-BFC5-0665-AEDF729CF777}.Debug|x64.ActiveCfg = Debug|x64
+		{F26CA258-D7BA-BFC5-0665-AEDF729CF777}.Debug|x64.Build.0 = Debug|x64
+		{F26CA258-D7BA-BFC5-0665-AEDF729CF777}.Release|x64.ActiveCfg = Release|x64
+		{F26CA258-D7BA-BFC5-0665-AEDF729CF777}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
