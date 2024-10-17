@@ -61,13 +61,8 @@ void Keyborad::paint(juce::Graphics& g)
 			g.fillRect(juce::Rectangle<float>((xl + xr) / 2.0 - 4 - 1, h2 + (h - h2) / 2 - 4, 8, 8));
 		}
 	}
-	g.setColour(juce::Colour(0xff00ff00));
-	juce::Path rectanglePath;
-	rectanglePath.addRectangle(0, h2, w, h - h2);
-	juce::PathStrokeType strokeType(2.0f);
-	g.strokePath(rectanglePath, strokeType);
 
-	if (firEnable)
+	if (reso->firEnable)
 	{
 		g.setColour(juce::Colour(0xff00ffff));
 	}
@@ -92,7 +87,7 @@ void Keyborad::paint(juce::Graphics& g)
 					freq = (freq - minNote) / (maxNote - minNote);
 					if (freq >= 0 || freq <= 1.0)
 					{
-						g.drawLine(freq * w + halfKeyWidth, h2, freq * w + halfKeyWidth, h2 - gain * h / 3, 2);
+						g.drawLine(freq * w + halfKeyWidth, h2 - 16, freq * w + halfKeyWidth, h2 - gain * h / 3 - 16, 2);
 					}
 				}
 				gain *= reso->harmDecayValue;
@@ -101,6 +96,12 @@ void Keyborad::paint(juce::Graphics& g)
 		}
 	}
 
+	g.setColour(juce::Colour(0xff00ff00));
+	juce::Path rectanglePath;
+	rectanglePath.addRectangle(0, h2, w, h - h2);
+	rectanglePath.addRectangle(0, 0, w, h2 - 16);
+	juce::PathStrokeType strokeType(2.0f);
+	g.strokePath(rectanglePath, strokeType);
 }
 
 void Keyborad::resized()
@@ -127,7 +128,7 @@ void Keyborad::mouseDown(const juce::MouseEvent& event)
 	}
 	if (event.mods.isMiddleButtonDown())
 	{
-		firEnable = !firEnable;
+		reso->firEnable = !reso->firEnable;
 	}
 }
 
@@ -175,7 +176,7 @@ int Keyborad::getDisplayMode()
 
 int Keyborad::isFirEnable()
 {
-	return firEnable;
+	return reso->firEnable;
 }
 
 void Keyborad::setNoteRange(int minNote, int maxNote)

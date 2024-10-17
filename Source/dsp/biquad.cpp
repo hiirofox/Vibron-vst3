@@ -139,6 +139,34 @@ void biquadApplyHPF(Biquad* filter, float ctof, float reso, float gain) {
 	filter->b2 = (1.0f + cosw0) / 2.0f / a0;
 }
 
+void biquadApplyLPFNoReso(Biquad* filter, float ctof)
+{
+	filter->type = 20;
+	filter->ctof = ctof;
+	filter->reso = 0.707;
+	filter->gain = 1.0;
+
+	filter->a1 = 2.0 * (ctof - 1.0);
+	filter->a2 = (ctof - 1.0) * (ctof - 1.0);
+	filter->b0 = ctof * ctof;
+	filter->b1 = 0.0;
+	filter->b2 = 0.0;
+}
+
+void biquadApplyHPFNoReso(Biquad* filter, float ctof)
+{
+	filter->type = 21;
+	filter->ctof = ctof;
+	filter->reso = 0.707;
+	filter->gain = 1.0;
+
+	filter->a1 = 2.0 * (ctof - 1.0);
+	filter->a2 = (ctof - 1.0) * (ctof - 1.0);
+	filter->b0 = 1.0 - ctof * ctof;
+	filter->b1 = filter->a1;
+	filter->b2 = filter->a2;
+}
+
 // 峰值滤波器（Peaking Filter）系数计算
 void biquadApplyPeaking(Biquad* filter, float ctof, float reso, float gain) {
 	filter->type = 3;

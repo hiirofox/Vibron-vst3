@@ -29,6 +29,10 @@ complex_f32_t biquadGetFreqResponse(Biquad* f, float w);//w:[0,2pi]
 void biquadApplyLPF(Biquad* filter, float ctof, float reso, float gain);
 void biquadApplyBPF(Biquad* filter, float ctof, float reso, float gain);
 void biquadApplyHPF(Biquad* filter, float ctof, float reso, float gain);
+
+void biquadApplyLPFNoReso(Biquad* filter, float ctof);
+void biquadApplyHPFNoReso(Biquad* filter, float ctof);
+
 void biquadApplyPeaking(Biquad* filter, float ctof, float reso, float gain);
 void biquadApplyLowShelf(Biquad* filter, float ctof, float reso, float gain);
 void biquadApplyHighShelf(Biquad* filter, float ctof, float reso, float gain);

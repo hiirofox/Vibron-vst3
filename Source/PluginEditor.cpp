@@ -39,10 +39,10 @@ LModelAudioProcessorEditor::LModelAudioProcessorEditor(LModelAudioProcessor& p)
 	K_PowVal.setText("PowVal");
 	K_PowVal.ParamLink(audioProcessor.GetParams(), "powVal");
 	addAndMakeVisible(K_PowVal);
-	K_MulVal.setText("mulVal");
+	K_MulVal.setText("MulVal");
 	K_MulVal.ParamLink(audioProcessor.GetParams(), "mulVal");
 	addAndMakeVisible(K_MulVal);
-	K_DecayVal.setText("DecayVal");
+	K_DecayVal.setText("COLOR");
 	K_DecayVal.ParamLink(audioProcessor.GetParams(), "decayVal");
 	addAndMakeVisible(K_DecayVal);
 	K_Reso.setText("Reso");
@@ -51,10 +51,10 @@ LModelAudioProcessorEditor::LModelAudioProcessorEditor(LModelAudioProcessor& p)
 	K_Mix.setText("Mix");
 	K_Mix.ParamLink(audioProcessor.GetParams(), "mix");
 	addAndMakeVisible(K_Mix);
-	K_PreLP.setText("preLP");
+	K_PreLP.setText("PreLP");
 	K_PreLP.ParamLink(audioProcessor.GetParams(), "prelp");
 	addAndMakeVisible(K_PreLP);
-	K_PreHP.setText("preHP");
+	K_PreHP.setText("PreHP");
 	K_PreHP.ParamLink(audioProcessor.GetParams(), "prehp");
 	addAndMakeVisible(K_PreHP);
 
@@ -72,12 +72,12 @@ void LModelAudioProcessorEditor::paint(juce::Graphics& g)
 	g.fillAll(juce::Colour(0x00, 0x00, 0x00));
 
 	g.fillAll();
-	g.setFont(juce::Font("FIXEDSYS", 16.0, 1));
-	g.setColour(juce::Colour(0xffffffff));;
+	g.setFont(juce::Font("FIXEDSYS", 17.0, 1));
+	g.setColour(juce::Colour(0xff00ff00));;
 
 	int w = getBounds().getWidth(), h = getBounds().getHeight();
 
-	juce::String tmp = "";
+	/*juce::String tmp = "";
 	char number[24];
 	for (int i = 0; i < MaxKeyNum; ++i)
 	{
@@ -87,7 +87,8 @@ void LModelAudioProcessorEditor::paint(juce::Graphics& g)
 			tmp += number;
 		}
 	}
-	g.drawText(tmp, juce::Rectangle<float>(0, h - 16, w, 16), 1);
+	g.drawText(tmp, juce::Rectangle<float>(0, h - 16, w, 16), 1);*/
+	g.drawText("L-MODEL Vibron", juce::Rectangle<float>(32, 16, w, 16), 1);
 }
 
 void LModelAudioProcessorEditor::resized()
@@ -111,10 +112,9 @@ void LModelAudioProcessorEditor::resized()
 #define MaxFRDatLen (32768)
 void LModelAudioProcessorEditor::timerCallback()
 {
-	audioProcessor.manager.firEnable = kb.isFirEnable();
 	if (audioProcessor.manager.firEnable)
 	{
-		K_Reso.setText("firSize");
+		K_Reso.setText("FIRSize");
 	}
 	else
 	{

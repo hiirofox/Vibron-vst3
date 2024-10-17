@@ -10,7 +10,7 @@ private:
 	int displayMode = 0;//0:exp,1:linear
 	int minNote = 24, maxNote = 60;//显示的部分(4个8度)
 	int selectNum;//鼠标悬停对应的键
-	int firEnable = 0;
+	
 	ResonatorManager* reso = NULL;
 public:
 	Keyborad();

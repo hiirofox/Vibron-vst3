@@ -49,6 +49,14 @@ LModelAudioProcessor::LModelAudioProcessor()
 	biquadInit(&hpf3);
 	biquadInit(&lpf4);
 	biquadInit(&hpf4);
+	biquadInit(&lsf1);
+	biquadInit(&hsf1);
+	biquadInit(&lsf2);
+	biquadInit(&hsf2);
+	biquadInit(&lsf3);
+	biquadInit(&hsf3);
+	biquadInit(&lsf4);
+	biquadInit(&hsf4);
 
 }
 
@@ -62,9 +70,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout LModelAudioProcessor::create
 	layout.add(std::make_unique<juce::AudioParameterFloat>("powVal", "powVal", 1, 2, 1.5));
 	layout.add(std::make_unique<juce::AudioParameterFloat>("decayVal", "decayVal", 0, 1, 0.5));
 	layout.add(std::make_unique<juce::AudioParameterFloat>("reso", "reso", 0.25, 1, 0.5));
-	layout.add(std::make_unique<juce::AudioParameterFloat>("mix", "mix", 0, 1, 1));
-	layout.add(std::make_unique<juce::AudioParameterFloat>("prelp", "prelp", 0, 1, 1));
-	layout.add(std::make_unique<juce::AudioParameterFloat>("prehp", "prehp", 0, 1, 0));
+	layout.add(std::make_unique<juce::AudioParameterFloat>("mix", "mix", 0, 1, 1.0));
+	layout.add(std::make_unique<juce::AudioParameterFloat>("prelp", "prelp", 0, 1, 0));
+	layout.add(std::make_unique<juce::AudioParameterFloat>("prehp", "prehp", 0, 1, 1));
 
 	//layout.add(std::make_unique<juce::AudioParameterFloat>("minKey", "minKey", 0, 128, 24));
 
@@ -230,17 +238,25 @@ void LModelAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::
 
 	prelp = prelp * prelp * prelp;
 	prehp = prehp * prehp * prehp;
-	prelp = prelp * 0.998 + 0.001;
-	prehp = prehp * 0.998 + 0.001;
+	prelp = prelp * 0.999 + 0.0005;
+	prehp = prehp * 0.999 + 0.0005;
 
-	biquadApplyLPF(&lpf1, prelp, 1.0 / sqrtf(2), 1.0);//pre lp/hp
-	biquadApplyHPF(&hpf1, prehp, 1.0 / sqrtf(2), 1.0);
-	biquadApplyLPF(&lpf2, prelp, 1.0 / sqrtf(2), 1.0);
-	biquadApplyHPF(&hpf2, prehp, 1.0 / sqrtf(2), 1.0);
-	biquadApplyLPF(&lpf3, prelp, 1.0 / sqrtf(2), 1.0);
-	biquadApplyHPF(&hpf3, prehp, 1.0 / sqrtf(2), 1.0);
-	biquadApplyLPF(&lpf4, prelp, 1.0 / sqrtf(2), 1.0);
-	biquadApplyHPF(&hpf4, prehp, 1.0 / sqrtf(2), 1.0);
+	biquadApplyLPF(&lpf1, prelp, 1.0 / sqrtf(2.0) * 1.0, 1);//pre lp/hp
+	biquadApplyHPF(&hpf1, prehp, 1.0 / sqrtf(2.0) * 1.0, 1);
+	biquadApplyLPF(&lpf2, prelp, 1.0 / sqrtf(2.0) * 1.0, 1);
+	biquadApplyHPF(&hpf2, prehp, 1.0 / sqrtf(2.0) * 1.0, 1);
+	biquadApplyLPF(&lpf3, prelp, 1.0 / sqrtf(2.0) * 1.0, 1);
+	biquadApplyHPF(&hpf3, prehp, 1.0 / sqrtf(2.0) * 1.0, 1);
+	biquadApplyLPF(&lpf4, prelp, 1.0 / sqrtf(2.0) * 1.0, 1);
+	biquadApplyHPF(&hpf4, prehp, 1.0 / sqrtf(2.0) * 1.0, 1);
+	biquadApplyLPF(&hsf1, prehp, 1.0 / sqrtf(2.0) * 1.0, 1);//pre lp/hp
+	biquadApplyHPF(&lsf1, prelp, 1.0 / sqrtf(2.0) * 1.0, 1);
+	biquadApplyLPF(&hsf2, prehp, 1.0 / sqrtf(2.0) * 1.0, 1);
+	biquadApplyHPF(&lsf2, prelp, 1.0 / sqrtf(2.0) * 1.0, 1);
+	biquadApplyLPF(&hsf3, prehp, 1.0 / sqrtf(2.0) * 1.0, 1);
+	biquadApplyHPF(&lsf3, prelp, 1.0 / sqrtf(2.0) * 1.0, 1);
+	biquadApplyLPF(&hsf4, prehp, 1.0 / sqrtf(2.0) * 1.0, 1);
+	biquadApplyHPF(&lsf4, prelp, 1.0 / sqrtf(2.0) * 1.0, 1);
 
 	manager.harmN = harmN;
 	manager.harmFreqMix = freqMix;
@@ -257,19 +273,29 @@ void LModelAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::
 		{
 			tmpbufl[i] = 0;
 			tmpbufr[i] = 0;
-			StereoSignal tmp = { recbufl[i],recbufr[i] };
-			tmp = biquadProcessStereo(&lpf1, tmp);//pre lp/hp
-			tmp = biquadProcessStereo(&hpf1, tmp);
-			tmp = biquadProcessStereo(&lpf2, tmp);
-			tmp = biquadProcessStereo(&hpf2, tmp);
-			tmp = biquadProcessStereo(&lpf3, tmp);
-			tmp = biquadProcessStereo(&hpf3, tmp);
-			tmp = biquadProcessStereo(&lpf4, tmp);
-			tmp = biquadProcessStereo(&hpf4, tmp);
-			tmpbufl2[i] = tmp.l;
-			tmpbufr2[i] = tmp.r;
-			tmpbufl3[i] = recbufl[i];
-			tmpbufr3[i] = recbufr[i];
+			StereoSignal tmplp = { recbufl[i] * 2,recbufr[i] * 2 };
+			tmplp = biquadProcessStereo(&lpf1, tmplp);
+			tmplp = biquadProcessStereo(&lpf2, tmplp);
+			tmplp = biquadProcessStereo(&lpf3, tmplp);
+			tmplp = biquadProcessStereo(&lpf4, tmplp);
+			StereoSignal tmphp = { recbufl[i] * 2,recbufr[i] * 2 };
+			tmphp = biquadProcessStereo(&hpf1, tmphp);
+			tmphp = biquadProcessStereo(&hpf2, tmphp);
+			tmphp = biquadProcessStereo(&hpf3, tmphp);
+			tmphp = biquadProcessStereo(&hpf4, tmphp);
+			StereoSignal tmps = { recbufl[i] * 2,recbufr[i] * 2 };
+			tmps = biquadProcessStereo(&lsf1, tmps);
+			tmps = biquadProcessStereo(&lsf2, tmps);
+			tmps = biquadProcessStereo(&lsf3, tmps);
+			tmps = biquadProcessStereo(&lsf4, tmps);
+			tmps = biquadProcessStereo(&hsf1, tmps);
+			tmps = biquadProcessStereo(&hsf2, tmps);
+			tmps = biquadProcessStereo(&hsf3, tmps);
+			tmps = biquadProcessStereo(&hsf4, tmps);
+			tmpbufl2[i] = tmps.l;
+			tmpbufr2[i] = tmps.r;
+			tmpbufl3[i] = tmplp.l + tmphp.l;
+			tmpbufr3[i] = tmplp.r + tmphp.r;
 
 		}
 
@@ -299,8 +325,8 @@ void LModelAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::
 		}
 		for (int i = 0; i < numSamples; ++i)
 		{
-			wavbufl[i] = tmpbufl[i] * (mix)*iirGain + tmpbufl3[i] * (1.0 - mix);
-			wavbufr[i] = tmpbufr[i] * (mix)*iirGain + tmpbufr3[i] * (1.0 - mix);
+			wavbufl[i] = tmpbufl[i] * iirGain * mix + tmpbufl3[i] * (1.0 - mix);
+			wavbufr[i] = tmpbufr[i] * iirGain * mix + tmpbufr3[i] * (1.0 - mix);
 		}
 	}
 	else
@@ -309,21 +335,31 @@ void LModelAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::
 		{
 			tmpbufl[i] = recbufl[i];
 			tmpbufr[i] = recbufr[i];
-
-			StereoSignal tmp = { tmpbufl[i],tmpbufr[i] };
-			tmp = biquadProcessStereo(&lpf1, tmp);
-			tmp = biquadProcessStereo(&hpf1, tmp);
-			tmp = biquadProcessStereo(&lpf2, tmp);
-			tmp = biquadProcessStereo(&hpf2, tmp);
-			tmp = biquadProcessStereo(&lpf3, tmp);
-			tmp = biquadProcessStereo(&hpf3, tmp);
-			tmp = biquadProcessStereo(&lpf4, tmp);
-			tmp = biquadProcessStereo(&hpf4, tmp);
-
-			tmpbufl2[i] = tmp.l;
-			tmpbufr2[i] = tmp.r;
+			StereoSignal tmplp = { tmpbufl[i] * 2,tmpbufr[i] * 2 };
+			tmplp = biquadProcessStereo(&lpf1, tmplp);
+			tmplp = biquadProcessStereo(&lpf2, tmplp);
+			tmplp = biquadProcessStereo(&lpf3, tmplp);
+			tmplp = biquadProcessStereo(&lpf4, tmplp);
+			StereoSignal tmphp = { tmpbufl[i] * 2,tmpbufr[i] * 2 };
+			tmphp = biquadProcessStereo(&hpf1, tmphp);
+			tmphp = biquadProcessStereo(&hpf2, tmphp);
+			tmphp = biquadProcessStereo(&hpf3, tmphp);
+			tmphp = biquadProcessStereo(&hpf4, tmphp);
+			StereoSignal tmps = { tmpbufl[i] * 2,tmpbufr[i] * 2 };
+			tmps = biquadProcessStereo(&lsf1, tmps);
+			tmps = biquadProcessStereo(&lsf2, tmps);
+			tmps = biquadProcessStereo(&lsf3, tmps);
+			tmps = biquadProcessStereo(&lsf4, tmps);
+			tmps = biquadProcessStereo(&hsf1, tmps);
+			tmps = biquadProcessStereo(&hsf2, tmps);
+			tmps = biquadProcessStereo(&hsf3, tmps);
+			tmps = biquadProcessStereo(&hsf4, tmps);
+			tmpbufl2[i] = tmps.l;
+			tmpbufr2[i] = tmps.r;
+			tmpbufl3[i] = tmplp.l + tmphp.l;
+			tmpbufr3[i] = tmplp.r + tmphp.r;//test
 		}
-		firReso.proc(tmpbufl, tmpbufr,	//mix信号
+		firReso.proc(tmpbufl3, tmpbufr3,	//mix信号
 			tmpbufl2, tmpbufr2,			//要fir的信号
 			wavbufl, wavbufr,			//输出
 			numSamples, mix, reso * FFT_Length);
@@ -340,6 +376,7 @@ void LModelAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::
 				firDat[i] = 0;
 			}
 		}
+		float freqfix = powf(2.0, 1.0 / 12.0 / 2.0);
 		for (int i = 0; i < MaxKeyNum; ++i)
 		{
 			if (manager.keyState[i])
@@ -350,7 +387,7 @@ void LModelAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::
 				for (int j = 0; j < manager.harmN; ++j)
 				{
 					float freq = f0 * ((float)j * manager.harmMulValue + 1) * (1.0 - manager.harmFreqMix) + f0mul * manager.harmFreqMix;
-					freq = freq / SampleRate;
+					freq = freq / SampleRate * freqfix;
 					bpfEnable[i][j] = 0;
 					if (freq > 0.002 && freq < 0.5)
 					{

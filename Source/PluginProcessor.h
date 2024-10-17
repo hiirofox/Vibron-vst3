@@ -82,6 +82,10 @@ public:
 	Biquad lpf2, hpf2;
 	Biquad lpf3, hpf3;
 	Biquad lpf4, hpf4;
+	Biquad lsf1, hsf1;
+	Biquad lsf2, hsf2;
+	Biquad lsf3, hsf3;
+	Biquad lsf4, hsf4;
 private:
 	//Synth Param
 	static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
